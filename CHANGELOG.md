@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- **Proxy support.** In countries where Discord is blocked, **Settings ▸ Proxy** now sends Discord through an HTTP, HTTPS, SOCKS4 or SOCKS5 proxy, login included, and a **Test** button checks that Discord really answers through it. The gateway WebSocket, the login, the CDN, Go Live and the QR login all take that route, as do Steamcord's own downloads (updates, attachments, the Windows Vesktop download). Because Chromium ignores credentials in `--proxy-server` and cannot authenticate SOCKS5, Steamcord runs a small loopback proxy that adds the login; the password stays in `~/.config/steamcord-proxy.json` (mode 600) and never reaches a command line or the log. Voice and video still go around any proxy — that is Chromium's behaviour, not a setting — so blocked calls still need a system tunnel with TUN mode.
+
 ## 1.43.2 — 2026-11-03
 
 ### Fixes

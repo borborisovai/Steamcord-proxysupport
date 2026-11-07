@@ -15,6 +15,7 @@ Voice chat, private messages and screen sharing from the Quick Access Menu, with
 
 ## What's new
 
+- **New: proxy support** — where Discord is blocked, **Settings ▸ Proxy** sends Discord and Steamcord's downloads through an HTTP, HTTPS, SOCKS4 or SOCKS5 proxy (login included), with a connection test. Voice and video still need a system tunnel — see [Using a proxy](#using-a-proxy).
 - **New: Windows support** — Steamcord now also runs in Steam Big Picture on Windows, with Decky from Playhub or musika08's Decky Loader for Windows. See [Steamcord on Windows](docs/WINDOWS.md). Thanks to [@SilvertongueRED](https://github.com/SilvertongueRED) for their contribution!
 - **Expanded view** — The Steam main menu entry is now named **Steamcord**. It opens the existing expanded Discord view; the Quick Access panel remains available.
 - v1.41.4: Private conversations refresh automatically and follow the latest sent/received message. Pin a conversation with the small pin icon and use the arrows beside pinned chats to change their order. Pins and their order are saved per Discord account and shared between Voice, Text and Big Screen. Controller navigation fixes were tested on Bazzite; feedback from other SteamOS devices is welcome.
@@ -35,6 +36,7 @@ Going native fixes the hard problems of the old hidden-browser approach: **your 
 
 - **One Discord per Steam account (multi-session)** — Every Steam user on the machine gets their **own Discord profile**: switch the Steam account and Steamcord switches Discord automatically within seconds (the first time shows the QR login; after that each session is remembered). Nobody lands in someone else's Discord.
 - **QR code login** — Scan a QR code with the Discord mobile app to log in instantly. On your phone: *Discord → Settings → Scan QR Code*, then aim at the code shown in the panel. No password typing on the Deck.
+- **Proxy** — Where Discord is blocked, point Steamcord at an **HTTP, HTTPS, SOCKS4 or SOCKS5** proxy (login included) in **Settings ▸ Proxy**. Discord and Steamcord's own downloads go through it, and the *Test* button says whether Discord really answers. Voice and video cannot follow a proxy — see [Using a proxy](#using-a-proxy).
 - **CAPTCHA solver, no Desktop Mode** — Discord sometimes puts a CAPTCHA on its login page; until it is solved no login ticket is issued and the QR code just keeps refreshing. Steamcord detects that and mirrors the login page in Gaming Mode so you can clear the challenge with the controller: D-pad moves the pointer, A clicks.
 - **Unified navigation** — Top tabs **Voice / Text / ⚙️ Settings**, with a shared **Servers / DMs** switch underneath, so the same source toggle works for both voice and text.
 - **Voice chat** — Join voice channels and hear everyone, with each member shown live (speaking ring, mute/deafen badges), a per-user volume slider (0–200%) **and a per-user local mute** (silence someone just for you, without them knowing). Mic and audio are native (Vesktop).
@@ -107,6 +109,17 @@ Nothing else is required: the Python dependencies are vendored, and the handful 
 
 ### Screen share
 Screen sharing works out of the box — the plugin auto-installs its Python dependency (aiohttp) for the system Python on first run. GStreamer is provided by the system.
+
+### Using a proxy
+
+Discord is blocked in some countries, and a VPN for the whole console is often more than people want. **Settings ▸ Proxy** takes an HTTP, HTTPS, SOCKS4 or SOCKS5 proxy, with a login, a port and an optional list of hosts to reach directly:
+
+- **Discord follows the proxy.** Steamcord launches Vesktop with Chromium's `--proxy-server`, so the login, the gateway WebSocket, the CDN, Go Live and the QR login all take that route. When the proxy needs a username and password — or is SOCKS — Steamcord runs a small proxy of its own on `127.0.0.1` that adds the login, because Chromium ignores credentials in `--proxy-server` and cannot authenticate SOCKS5 at all.
+- **Steamcord's own downloads follow it too:** the updater, attachments saved from a conversation, the QR-login exchange and the Windows Vesktop download.
+- **A full URL can be pasted into the host field** (`socks5://user:pass@host:1080` fills every field).
+- **Voice and video do not.** Chromium never sends WebRTC's UDP through a proxy, and Discord's voice servers have no TCP fallback worth using. If calls are blocked where you are, keep a proxy app that offers a **TUN mode** (v2rayN, Hiddify, sing-box, mihomo, Throne…) or WireGuard: that captures UDP too, and Steamcord simply sees a working network.
+- Changing the proxy needs a new Vesktop process: the panel offers **Restart Discord** right after saving. A call in progress ends there.
+- The password is stored on the device only, in `~/.config/steamcord-proxy.json`, readable by your user alone (mode 600). It never appears in a command line, in the log or in the systemd unit.
 
 ### Controller voice shortcut in-game
 While a game has focus, Steam stops delivering controller buttons to its own UI, so a plugin cannot see them through Steam's API. Steamcord therefore reads the controller directly, in read-only mode and alongside Steam, so the shortcut keeps working in-game: the **Steam Controller (2026)** (tested through its USB dongle; wired and Bluetooth use the same report format) and the **Steam Deck's built-in controller** support A/B/X/Y, D-pad, L4/R4 and L5/R5; standard gamepads (Xbox, DualSense, 8BitDo… — anything Linux sees as a gamepad) support A/B/X/Y and the D-pad. Controllers that Steam takes over completely (such as the Switch 2 Pro Controller over USB) are read through Steam's own virtual gamepad, which Steam only feeds while a game has focus. Shortcuts using other buttons only work while the Steam UI or the QAM has focus.
