@@ -6,6 +6,12 @@
 
 - **Proxy support.** In countries where Discord is blocked, **Settings ▸ Proxy** now sends Discord through an HTTP, HTTPS, SOCKS4 or SOCKS5 proxy, login included, and a **Test** button checks that Discord really answers through it. The gateway WebSocket, the login, the CDN, Go Live and the QR login all take that route, as do Steamcord's own downloads (updates, attachments, the Windows Vesktop download). Because Chromium ignores credentials in `--proxy-server` and cannot authenticate SOCKS5, Steamcord runs a small loopback proxy that adds the login; the password stays in `~/.config/steamcord-proxy.json` (mode 600) and never reaches a command line or the log. Voice and video still go around any proxy — that is Chromium's behaviour, not a setting — so blocked calls still need a system tunnel with TUN mode.
 
+> **Install note.** `netproxy.py` is a new file at the plugin root, and the built-in updater
+> cannot create new files there (Decky owns that directory). Existing installs therefore take
+> this version with *Install plugin from URL*, not through the automatic update. If the Proxy
+> section shows a warning about the backend instead of its controls, the new Python has not
+> been loaded yet — restart Decky (or reinstall the plugin).
+
 ## 1.43.2 — 2026-11-03
 
 ### Fixes

@@ -119,6 +119,7 @@ Discord is blocked in some countries, and a VPN for the whole console is often m
 - **A full URL can be pasted into the host field** (`socks5://user:pass@host:1080` fills every field).
 - **Voice and video do not.** Chromium never sends WebRTC's UDP through a proxy, and Discord's voice servers have no TCP fallback worth using. If calls are blocked where you are, keep a proxy app that offers a **TUN mode** (v2rayN, Hiddify, sing-box, mihomo, Throne…) or WireGuard: that captures UDP too, and Steamcord simply sees a working network.
 - Changing the proxy needs a new Vesktop process: the panel offers **Restart Discord** right after saving. A call in progress ends there.
+- **If the section shows a warning instead of its controls**, Steamcord's backend has not been reloaded: after an update, restart Decky (or reinstall the plugin from the ZIP) so the new Python loads. Nothing is lost — the settings stay in place.
 - The password is stored on the device only, in `~/.config/steamcord-proxy.json`, readable by your user alone (mode 600). It never appears in a command line, in the log or in the systemd unit.
 
 ### Controller voice shortcut in-game
