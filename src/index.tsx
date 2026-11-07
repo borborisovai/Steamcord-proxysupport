@@ -89,6 +89,7 @@ import { ServerHub } from "./components/ServerHub";
 import { useOpenChat } from "./components/ExpandedNav";
 import { TextChat } from "./components/TextChat";
 import { DiscordRuntimeControl } from "./components/DiscordRuntimeControl";
+import { ProxySection } from "./components/ProxySettings";
 import { t } from "./i18n";
 import {
   call,
@@ -2335,6 +2336,11 @@ const ConfigPanel = () => {
       </SR>
       <OpenViewConfig />
       <MenuEntryToggle />
+      <hr />
+      <SR>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}><IcGear /> {t("proxy_section")}</div>
+      </SR>
+      <ProxySection />
       <HostFeature name="controller_shortcut">
       <hr />
       <SR>
